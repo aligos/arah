@@ -38,26 +38,6 @@ export default class App extends Component<Props, State> {
     });
   };
 
-  getDirection = degree => {
-    if (degree >= 22.5 && degree < 67.5) {
-      return 'NE';
-    } else if (degree >= 67.5 && degree < 112.5) {
-      return 'E';
-    } else if (degree >= 112.5 && degree < 157.5) {
-      return 'SE';
-    } else if (degree >= 157.5 && degree < 202.5) {
-      return 'S';
-    } else if (degree >= 202.5 && degree < 247.5) {
-      return 'SW';
-    } else if (degree >= 247.5 && degree < 292.5) {
-      return 'W';
-    } else if (degree >= 292.5 && degree < 337.5) {
-      return 'NW';
-    } else {
-      return 'N';
-    }
-  };
-
   clockToDate = (clock: string) => {
     let date = new Date();
     let time = clock.split(new RegExp(':'));
@@ -67,7 +47,6 @@ export default class App extends Component<Props, State> {
 
   getSalahStatus = () => {
     const { date, shalat } = this.state;
-    console.log(date, this.clockToDate(shalat.Fajr));
     if (date < this.clockToDate(shalat.Fajr)) {
       return 'Fajr';
     } else if (
@@ -89,6 +68,8 @@ export default class App extends Component<Props, State> {
       date > this.clockToDate(shalat.Maghrib) &&
       date < this.clockToDate(shalat.Isha)
     ) {
+      return 'Isha';
+    } else {
       return 'Isha';
     }
   };
