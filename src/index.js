@@ -1,29 +1,33 @@
-import React from 'react';
+import React from "react";
 import {
   Text,
   View,
   Dimensions,
   StyleSheet,
   TouchableOpacity
-} from 'react-native';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
-import NativeTachyons, { styles as s } from 'react-native-style-tachyons';
+} from "react-native";
+import { createBottomTabNavigator, createAppContainer } from "react-navigation";
+import NativeTachyons, { styles as s } from "react-native-style-tachyons";
 
-import HomeScreen from './Home';
-import Vicon from './components/fonts/Vicon';
-import Footer from './components/Footer';
-import BarAnimation from './components/BarAnimation';
+import { getData } from "./helpers";
+
+import HomeScreen from "./Home";
+import Vicon from "./components/fonts/Vicon";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Card from "./components/Card";
+import BarAnimation from "./components/BarAnimation";
 
 NativeTachyons.build(
   {
     /* REM parameter is optional, default is 16 */
-    rem: Dimensions.get('screen').width > 340 ? 18 : 16,
+    rem: Dimensions.get("screen").width > 340 ? 18 : 16,
     /* fontRem parameter is optional to allow adjustment in font-scaling. default falls back to rem */
     fontRem: 8,
     colors: {
       palette: {
-        primary: '#1a2a3a',
-        white: '#ffffff'
+        primary: "#1a2a3a",
+        white: "#ffffff"
       }
     }
   },
@@ -34,8 +38,8 @@ class TabNavigation extends React.Component {
   render() {
     const { navigation } = this.props;
     const { index, routes } = navigation.state;
-    const tabIcons = ['target', 'clock', 'moon'];
-    const tabColors = ['#1a2a3a', '#068587', '#F2B134'];
+    const tabIcons = ["target", "clock", "moon"];
+    const tabColors = ["#1a2a3a", "#068587", "#F2B134"];
     const tabWidth = [110, 135, 145];
     return (
       <Footer>
@@ -72,11 +76,37 @@ class TabNavigation extends React.Component {
 }
 
 class PrayerScreen extends React.Component {
+  state = {
+    shalat: null
+  };
+
+  componentDidMount = async () => {
+    let shalat = await getData("shalat");
+    delete shalat.day;
+    delete shalat.qibla;
+    this.setState({ shalat });
+  };
+
   render() {
+    const { shalat } = this.state;
     return (
-      <View style={[s.flx_i, s.jcc, s.aic]}>
-        <Text>Prayer Times!</Text>
-      </View>
+      <React.Fragment>
+        <Header>
+          <Text style={[s.f1, { fontFamily: "Lato-Bold" }]}>Prayer times</Text>
+        </Header>
+        <View style={[s.flx_i]}>
+          {shalat && (
+            <View style={[s.mh3]}>
+              {Object.keys(shalat).map((slt, i) => (
+                <Card key={i}>
+                  <Text>{slt}</Text>
+                  <Text>{shalat[slt]}</Text>
+                </Card>
+              ))}
+            </View>
+          )}
+        </View>
+      </React.Fragment>
     );
   }
 }
