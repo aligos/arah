@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import Animated from "react-native-reanimated";
-import { TouchableWithoutFeedback } from "react-native";
-import { styles as s } from "react-native-style-tachyons";
-import { withNavigationFocus } from "react-navigation";
+import React, { Component } from 'react';
+import Animated from 'react-native-reanimated';
+import { TouchableWithoutFeedback } from 'react-native';
+import { styles as s } from 'react-native-style-tachyons';
+import { withNavigationFocus } from 'react-navigation';
 
 const {
   set,
@@ -45,7 +45,7 @@ function runSpring(clock, value, dest) {
       startClock(clock)
     ]),
     spring(clock, state, config),
-    cond(state.finished, debug("stop clock", stopClock(clock))),
+    cond(state.finished, debug('stop clock', stopClock(clock))),
     state.position
   ]);
 }
@@ -83,12 +83,12 @@ class BarAnimation extends Component {
           {this.props.renderIcon()}
           <Animated.Text
             style={[
-              s.f2,
+              s.f5,
               s.ml2,
               s.jcc,
               s.aic,
               s.tc,
-              { color: color, fontFamily: "Lato-Regular" }
+              { color: color, fontFamily: 'Lato-Regular' }
             ]}
             numberOfLines={1}
           >

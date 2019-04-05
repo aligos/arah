@@ -23,12 +23,12 @@ NativeTachyons.build(
   {
     /* REM parameter is optional, default is 16 */
     rem: Dimensions.get('screen').width > 340 ? 18 : 16,
-    /* fontRem parameter is optional to allow adjustment in font-scaling. default falls back to rem */
-    fontRem: 8,
     colors: {
       palette: {
         primary: '#1a2a3a',
-        white: '#ffffff'
+        white: '#ffffff',
+        green: '#068587',
+        yellow: '#F2B134'
       }
     }
   },
@@ -100,18 +100,24 @@ class PrayersScreen extends React.Component {
     const { shalat } = this.state;
     return (
       <React.Fragment>
-        <Header>
-          <Text style={[s.f1, { fontFamily: 'Butler-Medium' }]}>
+        <Header backgroundColor="#f2f2f2f2">
+          <Text style={[s.f2, s.green, { fontFamily: 'Butler-Medium' }]}>
             Prayer times
           </Text>
         </Header>
-        <View style={[s.flx_i]}>
+        <View style={[s.flx_i, { backgroundColor: '#f2f2f2f2' }]}>
           {shalat && (
             <View style={[s.mh3]}>
               {Object.keys(shalat).map((slt, i) => (
                 <Card key={i}>
-                  <Text>{slt}</Text>
-                  <Text>{shalat[slt]}</Text>
+                  <Text
+                    style={[s.f5, s.primary, { fontFamily: 'Lato-Medium' }]}
+                  >
+                    {slt}
+                  </Text>
+                  <Text style={[s.f5, s.yellow, { fontFamily: 'Lato-Bold' }]}>
+                    {shalat[slt]}
+                  </Text>
                 </Card>
               ))}
             </View>
