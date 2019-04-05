@@ -101,7 +101,9 @@ class PrayersScreen extends React.Component {
     return (
       <React.Fragment>
         <Header>
-          <Text style={[s.f1, { fontFamily: 'Lato-Bold' }]}>Prayer times</Text>
+          <Text style={[s.f1, { fontFamily: 'Butler-Medium' }]}>
+            Prayer times
+          </Text>
         </Header>
         <View style={[s.flx_i]}>
           {shalat && (
