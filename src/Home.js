@@ -1,5 +1,5 @@
 /* @flow */
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,15 +7,20 @@ import {
   Image,
   Dimensions,
   StatusBar,
-  ImageBackground
-} from "react-native";
-import moment from "moment";
-import RNSimpleCompass from "react-native-simple-compass";
-import { styles as s } from "react-native-style-tachyons";
-import { getShalat } from "./api";
-import { storeData } from "./helpers";
+  ImageBackground,
+  PermissionsAndroid,
+  Alert,
+  Platform
+} from 'react-native';
+import Permissions from 'react-native-permissions';
+import moment from 'moment';
+import RNSimpleCompass from 'react-native-simple-compass';
+import { styles as s } from 'react-native-style-tachyons';
+import AndroidOpenSettings from 'react-native-android-open-settings';
+import { getShalat } from './api';
+import { storeData } from './helpers';
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 
 type Props = {};
 type State = {
@@ -25,13 +30,12 @@ export default class App extends Component<Props, State> {
   state = {
     degree: 0,
     date: new Date(),
-    shalat: null
+    shalat: null,
+    location: { lat: 0, lng: 0 }
   };
 
   componentDidMount = async () => {
-    const shalat = await getShalat("-7.387,108.249");
-    this.setState({ shalat });
-    storeData("shalat", shalat);
+    this.getCurrentLocation();
     setInterval(() => {
       this.setState({ date: new Date() });
     }, 1000);
@@ -40,9 +44,94 @@ export default class App extends Component<Props, State> {
     });
   };
 
+  componentDidUpdate = async (prevProps, prevState) => {
+    if (prevState.location !== this.state.location) {
+      const { lat, lng } = this.state.location;
+      const shalat = await getShalat(`${lat},${lng}`);
+      this.setState({ shalat });
+      storeData('shalat', shalat);
+    }
+  };
+
+  locationPermissionAndroid = async () => {
+    if (Platform.OS === 'ios') {
+      return true;
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title:
+              'Allow "ULO" to access your location while you are using the app?',
+            message:
+              'Your location is required for better functionality and user experience.'
+          }
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (err) {
+        return false;
+      }
+    }
+  };
+
+  alertForLocationPermission = () => {
+    if (this.state.locationPermission === 'undetermined') {
+      this.requestPermission();
+    } else if (this.state.locationPermission !== 'authorized') {
+      Alert.alert(
+        `Allow "ULO" to access your location while you are using the app?`,
+        `Your location is required for better functionality and user experience.`,
+        [
+          {
+            text: `Don't Allow`,
+            onPress: () => {},
+            style: 'cancel'
+          },
+          { text: 'Open Settings', onPress: Permissions.openSettings }
+        ]
+      );
+    }
+  };
+
+  requestPermission = async () => {
+    const locationPermission = await Permissions.request('location');
+    this.setState({ locationPermission });
+  };
+
+  getCurrentLocation = async () => {
+    const onChangeGPS = pos => {
+      const {
+        coords: { latitude, longitude }
+      } = pos;
+      let location = {
+        lat: latitude,
+        lng: longitude
+      };
+      this.setState({ location });
+    };
+    const onErrorGPS = () => {
+      this.alertForLocationPermission();
+    };
+    const locationPermission = await Permissions.check('location');
+    const locationAndroid = await this.locationPermissionAndroid();
+    this.setState({ locationPermission });
+    if (locationAndroid) {
+      navigator.geolocation.getCurrentPosition(onChangeGPS, onErrorGPS, {
+        enableHighAccuracy: false,
+        timeout: 20000,
+        maximumAge: 1000,
+        distanceFilter: 10
+      });
+    }
+  };
+
   clockToDate = (clock: string) => {
     let date = new Date();
-    let time = clock.split(new RegExp(":"));
+    let time = clock.split(new RegExp(':'));
     date.setHours(time[0], time[1], 0);
     return date;
   };
@@ -50,42 +139,42 @@ export default class App extends Component<Props, State> {
   getSalahStatus = () => {
     const { date, shalat } = this.state;
     if (date < this.clockToDate(shalat.Fajr)) {
-      return "Fajr";
+      return 'Fajr';
     } else if (
       date > this.clockToDate(shalat.Fajr) &&
       date < this.clockToDate(shalat.Dhuhr)
     ) {
-      return "Dhuhr";
+      return 'Dhuhr';
     } else if (
       date > this.clockToDate(shalat.Dhuhr) &&
       date < this.clockToDate(shalat.Asr)
     ) {
-      return "Asr";
+      return 'Asr';
     } else if (
       date > this.clockToDate(shalat.Asr) &&
       date < this.clockToDate(shalat.Maghrib)
     ) {
-      return "Maghrib";
+      return 'Maghrib';
     } else if (
       date > this.clockToDate(shalat.Maghrib) &&
       date < this.clockToDate(shalat.Isha)
     ) {
-      return "Isha";
+      return 'Isha';
     } else {
-      return "Isha";
+      return 'Isha';
     }
   };
 
   getSalahCountdown = () => {
     const { shalat } = this.state;
     switch (this.getSalahStatus()) {
-      case "Fajr":
+      case 'Fajr':
         return moment(this.clockToDate(shalat.Fajr)).fromNow();
-      case "Dhuhr":
+      case 'Dhuhr':
         return moment(this.clockToDate(shalat.Dhuhr)).fromNow();
-      case "Asr":
+      case 'Asr':
         return moment(this.clockToDate(shalat.Asr)).fromNow();
-      case "Maghrib":
+      case 'Maghrib':
         return moment(this.clockToDate(shalat.Maghrib)).fromNow();
       default:
         return moment(this.clockToDate(shalat.Isha)).fromNow();
@@ -102,37 +191,37 @@ export default class App extends Component<Props, State> {
           backgroundColor="transparent"
           barStyle="light-content"
           translucent={true}
-          showHideTransition={"fade"}
+          showHideTransition={'fade'}
         />
-        <View style={[s.flx_i, s.jcc, s.aic, { backgroundColor: "#1a2a3a" }]}>
+        <View style={[s.flx_i, s.jcc, s.aic, { backgroundColor: '#1a2a3a' }]}>
           {shalat && (
             <>
               <ImageBackground
-                source={require("../assets/images/compass_bg.png")}
+                source={require('../assets/images/compass_bg.png')}
                 style={{
                   height: width - 120,
                   width: width - 120,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  resizeMode: "contain",
-                  transform: [{ rotate: 270 - degree + "deg" }]
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  resizeMode: 'contain',
+                  transform: [{ rotate: 270 - degree + 'deg' }]
                 }}
               >
                 <Image
-                  source={require("../assets/images/arrow.png")}
+                  source={require('../assets/images/arrow.png')}
                   style={{
                     height: width - 150,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    resizeMode: "contain",
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    resizeMode: 'contain',
                     transform: [
-                      { rotate: parseFloat(shalat.qibla) - 270 + "deg" }
+                      { rotate: parseFloat(shalat.qibla) - 270 + 'deg' }
                     ]
                   }}
                 />
               </ImageBackground>
               <Text
-                style={[s.f2, s.white, s.mt4, { fontFamily: "Lato-Medium" }]}
+                style={[s.f2, s.white, s.mt4, { fontFamily: 'Lato-Medium' }]}
               >{`${this.getSalahStatus()} ${this.getSalahCountdown()}`}</Text>
             </>
           )}

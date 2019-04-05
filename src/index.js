@@ -75,7 +75,7 @@ class TabNavigation extends React.Component {
   }
 }
 
-class PrayerScreen extends React.Component {
+class PrayersScreen extends React.Component {
   state = {
     shalat: null
   };
@@ -124,7 +124,7 @@ class EventsScreen extends React.Component {
 const TabNavigator = createBottomTabNavigator(
   {
     Qibla: HomeScreen,
-    Prayer: PrayerScreen,
+    Prayers: PrayersScreen,
     Events: EventsScreen
   },
   {
