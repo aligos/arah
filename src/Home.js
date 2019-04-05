@@ -83,7 +83,7 @@ export default class App extends Component<Props, State> {
       this.requestPermission();
     } else if (this.state.locationPermission !== 'authorized') {
       Alert.alert(
-        `Allow "ULO" to access your location while you are using the app?`,
+        `Allow "Arah" to access your location while you are using the app?`,
         `Your location is required for better functionality and user experience.`,
         [
           {
@@ -91,7 +91,13 @@ export default class App extends Component<Props, State> {
             onPress: () => {},
             style: 'cancel'
           },
-          { text: 'Open Settings', onPress: Permissions.openSettings }
+          {
+            text: 'Open Settings',
+            onPress:
+              Platform.OS === 'ios'
+                ? Permissions.openSettings
+                : AndroidOpenSettings.locationSourceSettings
+          }
         ]
       );
     }
