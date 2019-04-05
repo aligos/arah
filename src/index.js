@@ -4,7 +4,8 @@ import {
   View,
   Dimensions,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  StatusBar
 } from 'react-native';
 import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 import NativeTachyons, { styles as s } from 'react-native-style-tachyons';
@@ -44,12 +45,20 @@ class TabNavigation extends React.Component {
     return (
       <Footer>
         {routes.map((route, i) => {
+          let navigate = () => {
+            if (route.routeName === 'Prayers' || route.routeName === 'Events') {
+              StatusBar.setBarStyle('dark-content');
+            } else {
+              StatusBar.setBarStyle('light-content');
+            }
+            navigation.navigate(route.routeName);
+          };
           if (i === index) {
             return (
               <BarAnimation
                 {...this.props}
                 key={route.key}
-                onPress={() => this.props.navigation.navigate(route.routeName)}
+                onPress={navigate}
                 label={route.key}
                 color={tabColors[i]}
                 tabWidth={tabWidth[i]}
@@ -63,7 +72,7 @@ class TabNavigation extends React.Component {
               <TouchableOpacity
                 style={[s.pv2, s.ph4]}
                 key={route.key}
-                onPress={() => this.props.navigation.navigate(route.routeName)}
+                onPress={navigate}
               >
                 <Vicon name={tabIcons[i]} size={18} color="#0C202D" />
               </TouchableOpacity>
