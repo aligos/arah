@@ -227,7 +227,7 @@ export default class App extends Component<Props, State> {
                 />
               </ImageBackground>
               <Text
-                style={[s.f2, s.white, s.mt4, { fontFamily: 'Lato-Medium' }]}
+                style={[s.f2, s.white, s.mt5, { fontFamily: 'Butler-Medium' }]}
               >{`${this.getSalahStatus()} ${this.getSalahCountdown()}`}</Text>
             </>
           )}
