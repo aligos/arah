@@ -17,16 +17,18 @@ import moment from 'moment';
 import RNSimpleCompass from 'react-native-simple-compass';
 import { styles as s } from 'react-native-style-tachyons';
 import AndroidOpenSettings from 'react-native-android-open-settings';
+import LottieView from 'lottie-react-native';
+
 import { getShalat } from './api';
 import { storeData } from './helpers';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 type Props = {};
 type State = {
   degree: number
 };
-export default class App extends Component<Props, State> {
+export default class Qibla extends Component<Props, State> {
   state = {
     degree: 0,
     date: new Date(),
@@ -50,6 +52,10 @@ export default class App extends Component<Props, State> {
       const shalat = await getShalat(`${lat},${lng}`);
       this.setState({ shalat });
       storeData('shalat', shalat);
+    }
+    const { isFocused } = this.props;
+    if (prevProps.isFocused !== isFocused) {
+      this.animation.play();
     }
   };
 
@@ -200,7 +206,7 @@ export default class App extends Component<Props, State> {
           showHideTransition={'fade'}
         />
         <View style={[s.flx_i, s.jcc, s.aic, { backgroundColor: '#1a2a3a' }]}>
-          {shalat && (
+          {shalat ? (
             <>
               <ImageBackground
                 source={require('../assets/images/compass_bg.png')}
@@ -230,6 +236,16 @@ export default class App extends Component<Props, State> {
                 style={[s.f4, s.white, s.mt5, { fontFamily: 'Butler-Medium' }]}
               >{`${this.getSalahStatus()} ${this.getSalahCountdown()}`}</Text>
             </>
+          ) : (
+            <LottieView
+              style={[s.h3]}
+              ref={animation => {
+                this.animation = animation;
+              }}
+              source={require('./animations/circle.json')}
+              autoPlay
+              loop
+            />
           )}
         </View>
       </React.Fragment>

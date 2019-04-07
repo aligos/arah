@@ -2,20 +2,21 @@ import React from 'react';
 import { View } from 'react-native';
 import { styles as s } from 'react-native-style-tachyons';
 
-export default function Card(props) {
+export default function Badge(props) {
   let { children, backgroundColor } = props;
   return (
     <View
       style={[
-        s.bg_white,
-        s.flx_row,
+        s.flx_column,
         s.aic,
         s.jcsb,
-        s.pa2,
+        s.pa3,
         s.mb2,
         s.br2,
         {
-          height: 50,
+          backgroundColor,
+          height: 160,
+          width: 120,
           elevation: 4,
           shadowOffset: { width: 3, height: 3 },
           shadowColor: '#dddddd',

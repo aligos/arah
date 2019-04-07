@@ -10,13 +10,12 @@ import {
 import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 import NativeTachyons, { styles as s } from 'react-native-style-tachyons';
 
-import { getData } from './helpers';
+import Qibla from './Qibla';
+import Prayers from './Prayers';
+import Events from './Events.js';
 
-import HomeScreen from './Home';
 import Vicon from './components/fonts/Vicon';
-import Header from './components/Header';
 import Footer from './components/Footer';
-import Card from './components/Card';
 import BarAnimation from './components/BarAnimation';
 
 NativeTachyons.build(
@@ -28,7 +27,10 @@ NativeTachyons.build(
         primary: '#1a2a3a',
         white: '#ffffff',
         green: '#068587',
-        yellow: '#F2B134'
+        yellow: '#F2B134',
+        purple: '#3d2c8a',
+        lightBlue: '#92c4cb',
+        red: '#be343a'
       }
     }
   },
@@ -84,65 +86,11 @@ class TabNavigation extends React.Component {
   }
 }
 
-class PrayersScreen extends React.Component {
-  state = {
-    shalat: null
-  };
-
-  componentDidMount = async () => {
-    let shalat = await getData('shalat');
-    delete shalat.day;
-    delete shalat.qibla;
-    this.setState({ shalat });
-  };
-
-  render() {
-    const { shalat } = this.state;
-    return (
-      <React.Fragment>
-        <Header backgroundColor="#f2f2f2f2">
-          <Text style={[s.f2, s.green, { fontFamily: 'Butler-Medium' }]}>
-            Prayer times
-          </Text>
-        </Header>
-        <View style={[s.flx_i, { backgroundColor: '#f2f2f2f2' }]}>
-          {shalat && (
-            <View style={[s.mh3]}>
-              {Object.keys(shalat).map((slt, i) => (
-                <Card key={i}>
-                  <Text
-                    style={[s.f5, s.primary, { fontFamily: 'Lato-Medium' }]}
-                  >
-                    {slt}
-                  </Text>
-                  <Text style={[s.f5, s.yellow, { fontFamily: 'Lato-Bold' }]}>
-                    {shalat[slt]}
-                  </Text>
-                </Card>
-              ))}
-            </View>
-          )}
-        </View>
-      </React.Fragment>
-    );
-  }
-}
-
-class EventsScreen extends React.Component {
-  render() {
-    return (
-      <View style={[s.flx_i, s.jcc, s.aic]}>
-        <Text>Events!</Text>
-      </View>
-    );
-  }
-}
-
 const TabNavigator = createBottomTabNavigator(
   {
-    Qibla: HomeScreen,
-    Prayers: PrayersScreen,
-    Events: EventsScreen
+    Qibla: Qibla,
+    Prayers: Prayers,
+    Events: Events
   },
   {
     tabBarComponent: props => <TabNavigation {...props} />,
