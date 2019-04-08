@@ -7,10 +7,15 @@ import {
   TouchableOpacity,
   StatusBar
 } from 'react-native';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
+import {
+  createStackNavigator,
+  createBottomTabNavigator,
+  createAppContainer
+} from 'react-navigation';
 import NativeTachyons, { styles as s } from 'react-native-style-tachyons';
 import SplashScreen from 'react-native-splash-screen';
 
+import About from './About';
 import Qibla from './Qibla';
 import Prayers from './Prayers';
 import Events from './Events.js';
@@ -25,6 +30,7 @@ NativeTachyons.build(
     rem: Dimensions.get('screen').width > 340 ? 18 : 16,
     colors: {
       palette: {
+        splash: '#061C20',
         primary: '#1a2a3a',
         white: '#ffffff',
         green: '#068587',
@@ -90,9 +96,25 @@ class TabNavigation extends React.Component {
   }
 }
 
+const Home = createStackNavigator({
+  Qibla: Qibla,
+  About: About
+});
+
+Home.navigationOptions = ({
+  navigation: {
+    state: { index, routes }
+  }
+}) => {
+  const { params } = routes[index];
+  return {
+    tabBarVisible: params ? params.tabBarVisible : index > 0 ? false : true
+  };
+};
+
 const TabNavigator = createBottomTabNavigator(
   {
-    Qibla: Qibla,
+    Qibla: Home,
     Prayers: Prayers,
     Events: Events
   },

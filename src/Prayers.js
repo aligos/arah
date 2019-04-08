@@ -23,7 +23,7 @@ export default class Prayers extends React.Component {
     const { shalat } = this.state;
     return (
       <React.Fragment>
-        <Header backgroundColor="#f2f2f2f2">
+        <Header backgroundColor="#f2f2f2f2" height={120}>
           <Text style={[s.f2, s.green, s.pb3, { fontFamily: 'Butler-Medium' }]}>
             Prayer times
           </Text>

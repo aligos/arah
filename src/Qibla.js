@@ -10,7 +10,8 @@ import {
   ImageBackground,
   PermissionsAndroid,
   Alert,
-  Platform
+  Platform,
+  TouchableOpacity
 } from 'react-native';
 import Permissions from 'react-native-permissions';
 import moment from 'moment';
@@ -18,6 +19,10 @@ import RNSimpleCompass from 'react-native-simple-compass';
 import { styles as s } from 'react-native-style-tachyons';
 import AndroidOpenSettings from 'react-native-android-open-settings';
 import LottieView from 'lottie-react-native';
+
+import Vicon from './components/fonts/Vicon';
+import Fuel from './components/fonts/Fuel';
+import Header from './components/Header';
 
 import { getShalat } from './api';
 import { storeData } from './helpers';
@@ -29,6 +34,9 @@ type State = {
   degree: number
 };
 export default class Qibla extends Component<Props, State> {
+  static navigationOptions = {
+    header: null
+  };
   state = {
     degree: 0,
     date: new Date(),
@@ -194,10 +202,24 @@ export default class Qibla extends Component<Props, State> {
   };
 
   render() {
-    const { degree, shalat, date } = this.state;
-    const timeInfo = `Menuju waktu ${shalat && this.getSalahStatus()}`;
+    const { degree, shalat } = this.state;
     return (
       <React.Fragment>
+        <Header
+          backgroundColor="#1a2a3a"
+          height={80}
+          style={[s.absolute, s.z_index]}
+        >
+          <TouchableOpacity
+            style={[s.aife, s.jcfe]}
+            onPress={() => this.props.navigation.goBack()}
+          >
+            <Image
+              style={{ height: 16, width: 34 }}
+              source={require('../assets/images/menu.png')}
+            />
+          </TouchableOpacity>
+        </Header>
         <StatusBar
           animated={true}
           backgroundColor="transparent"

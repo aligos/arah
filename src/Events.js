@@ -59,7 +59,7 @@ class Events extends React.Component {
     const { events } = this.state;
     return (
       <React.Fragment>
-        <Header backgroundColor="#f2f2f2f2">
+        <Header backgroundColor="#f2f2f2f2" height={120}>
           <Text style={[s.f2, s.green, s.pb3, { fontFamily: 'Butler-Medium' }]}>
             Events
           </Text>
