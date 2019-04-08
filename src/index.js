@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 import NativeTachyons, { styles as s } from 'react-native-style-tachyons';
+import SplashScreen from 'react-native-splash-screen';
 
 import Qibla from './Qibla';
 import Prayers from './Prayers';
@@ -38,6 +39,9 @@ NativeTachyons.build(
 );
 
 class TabNavigation extends React.Component {
+  componentDidMount() {
+    SplashScreen.hide();
+  }
   render() {
     const { navigation } = this.props;
     const { index, routes } = navigation.state;
