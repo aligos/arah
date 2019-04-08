@@ -44,9 +44,20 @@ class About extends React.Component {
           />
           <View style={[s.flx_i, s.jcc, { marginTop: -80 }]}>
             <Image
-              style={{ width: 120, height: 240, resizeMode: 'contain' }}
+              style={{ width: 160, height: 160, resizeMode: 'contain' }}
               source={require('../assets/images/logo.png')}
             />
+            <Text
+              style={[
+                s.f3,
+                s.white,
+                s.tc,
+                s.pv1,
+                { fontFamily: 'Butler-Medium' }
+              ]}
+            >
+              Arah
+            </Text>
             <Text style={[s.white, s.tc, s.pv1, { fontFamily: 'Lato-Medium' }]}>
               Version {require('../package.json').version}
             </Text>

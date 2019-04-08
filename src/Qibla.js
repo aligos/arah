@@ -11,7 +11,8 @@ import {
   PermissionsAndroid,
   Alert,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  Linking
 } from 'react-native';
 import Permissions from 'react-native-permissions';
 import moment from 'moment';
@@ -19,6 +20,12 @@ import RNSimpleCompass from 'react-native-simple-compass';
 import { styles as s } from 'react-native-style-tachyons';
 import AndroidOpenSettings from 'react-native-android-open-settings';
 import LottieView from 'lottie-react-native';
+import Menu, {
+  MenuProvider,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger
+} from 'react-native-popup-menu';
 
 import Vicon from './components/fonts/Vicon';
 import Fuel from './components/fonts/Fuel';
@@ -204,21 +211,56 @@ export default class Qibla extends Component<Props, State> {
   render() {
     const { degree, shalat } = this.state;
     return (
-      <React.Fragment>
+      <MenuProvider style={{ flex: 1 }}>
         <Header
           backgroundColor="#1a2a3a"
           height={80}
           style={[s.absolute, s.z_index]}
         >
-          <TouchableOpacity
-            style={[s.aife, s.jcfe]}
-            onPress={() => this.props.navigation.goBack()}
+          <Menu
+            opened={this.state.menu}
+            onBackdropPress={() =>
+              this.setState({
+                menu: false
+              })
+            }
           >
-            <Image
-              style={{ height: 16, width: 34 }}
-              source={require('../assets/images/menu.png')}
-            />
-          </TouchableOpacity>
+            <MenuTrigger style={{ borderRadius: 30, borderWidth: 0 }}>
+              <TouchableOpacity
+                style={[s.aife, s.jcfe]}
+                onPress={() => this.setState({ menu: true })}
+              >
+                <Image
+                  style={{ height: 16, width: 34 }}
+                  source={require('../assets/images/menu.png')}
+                />
+              </TouchableOpacity>
+            </MenuTrigger>
+            <MenuOptions style={[s.pv2, s.ph3]}>
+              <MenuOption
+                onSelect={() => {
+                  this.setState({ menu: false });
+                  this.props.navigation.navigate('About');
+                }}
+              >
+                <Text style={[s.primary, s.f5, { fontFamily: 'Lato-Medium' }]}>
+                  About
+                </Text>
+              </MenuOption>
+              <MenuOption
+                onSelect={() => {
+                  this.setState({ menu: false });
+                  Linking.openURL(
+                    'http://1001digitalproducts.awancoder.com/report/'
+                  );
+                }}
+              >
+                <Text style={[s.primary, s.f5, { fontFamily: 'Lato-Medium' }]}>
+                  Report
+                </Text>
+              </MenuOption>
+            </MenuOptions>
+          </Menu>
         </Header>
         <StatusBar
           animated={true}
@@ -270,7 +312,7 @@ export default class Qibla extends Component<Props, State> {
             />
           )}
         </View>
-      </React.Fragment>
+      </MenuProvider>
     );
   }
 }

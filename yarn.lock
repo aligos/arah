@@ -5434,6 +5434,11 @@ react-native-permissions@^1.1.1:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-1.1.1.tgz#4876004681ff8556454613d85249b01baff9b35b"
   integrity sha512-t0Ujm177bagjUOSzhpmkSz+LqFW04HnY9TeZFavDCmV521fQvFz82aD+POXqWsAdsJVOK3umJYBNNqCjC3g0hQ==
 
+react-native-popup-menu@^0.15.5:
+  version "0.15.5"
+  resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.15.5.tgz#3f5d7e58f4af8ef108481d5ec2df44e007f3698e"
+  integrity sha512-9Lgj3HQgemrEDddiDGS9x/5U9jLdo9hzYpGqohmIBe7n+z9VN1P/VxOr951WZAq6GPUHnNDXBBM/7Mun+1v5hw==
+
 react-native-reanimated@^1.0.0-alpha.12:
   version "1.0.0-alpha.12"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.0.0-alpha.12.tgz#535c84a9e87c919417aee0fa68f360b3bb9556b0"
